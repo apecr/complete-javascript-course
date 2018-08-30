@@ -30,12 +30,30 @@ const maxHeartRate = age => (age >= 18 && age <= 81) ? Math.round(206.9 - (0.67 
 
 
 const ages = arrayCalc(years, calculateAge);
-console.log(years.map(calculateAge));
-const fullages = arrayCalc(ages, isFullAge);
-console.log(years
-  .map(calculateAge)
-  .map(isFullAge));
 
-console.log(years
-  .map(calculateAge)
-  .map(maxHeartRate));
+// console.log(years.map(calculateAge));
+const fullages = arrayCalc(ages, isFullAge);
+
+// console.log(years
+//   .map(calculateAge)
+//   .map(isFullAge));
+
+// console.log(years
+//   .map(calculateAge)
+//   .map(maxHeartRate));
+
+// Functions returning functions
+
+const interviewQuestion = job => {
+  if (job === 'designer') {
+    return name => console.log(`${name}, can you explain what UX design is?`);
+  } else if (job === 'teacher') {
+    return name => console.log(`What subject do you teach ${name}?`);
+  } else {
+    return name => console.log(`Hello ${name}, what do you do?`);
+  }
+};
+
+const teacherQuestion = interviewQuestion('teacher');
+teacherQuestion('John');
+interviewQuestion('designer')('Jane');
