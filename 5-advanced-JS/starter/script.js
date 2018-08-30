@@ -55,6 +55,19 @@ const interviewQuestion = job => {
 };
 
 const teacherQuestion = interviewQuestion('teacher');
-teacherQuestion('John');
-interviewQuestion('designer')('Jane');
-interviewQuestion('taxi driver')('Jane');
+
+// teacherQuestion('John');
+// interviewQuestion('designer')('Jane');
+// interviewQuestion('taxi driver')('Jane');
+
+// IIFE
+
+// const game = _ => {
+//   let score = Math.random() * 10;
+//   console.log(score >= 5);
+// };
+
+// game();
+
+(_ => console.log(Math.random() * 10 >= 5))();
+(goodLuck => console.log(Math.random() * 10 >= 5 - goodLuck))(5);
