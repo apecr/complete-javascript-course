@@ -84,7 +84,25 @@ const retirement = retirementAge => {
 };
 
 const retirementsByCountry = {
-  US: 66
+  US: 66,
+  Germany: 65,
+  Iceland: 67
 };
 
 retirement(retirementsByCountry.US)(1990);
+retirement(retirementsByCountry.Germany)(1990);
+retirement(retirementsByCountry.Iceland)(1990);
+
+const interviewQuestionWithClosure = job => name => {
+  const jobs = {
+    designer: `${name}, can you explain what UX design is?`,
+    teacher: `What subject do you teach ${name}?`
+  };
+  console.log(jobs.hasOwnProperty(job)
+    ? jobs[job]
+    : `Hello ${name}, what do you do?`);
+};
+
+interviewQuestionWithClosure('designer')('Jane');
+interviewQuestionWithClosure('taxi driver')('Jane');
+interviewQuestionWithClosure('teacher')('Alberto');
