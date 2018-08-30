@@ -142,6 +142,7 @@ const emilyFormal = jonh.presentation.bind(emily, 'formal');
 emilyFormal('afternoon');
 
 let ages2 = arrayCalc(years, calculateAge);
+console.log(ages2);
 const isFullAgeWitLimit = (limit, age) => age >= limit;
-let fullAges = arrayCalc(ages2, isFullAge.bind(undefined, 20));
-console.log(fullages);
+const fullAges = arrayCalc(ages2, isFullAgeWitLimit.bind(this, 20));
+console.log(fullAges);
