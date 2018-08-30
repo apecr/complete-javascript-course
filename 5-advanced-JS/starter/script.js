@@ -106,3 +106,37 @@ const interviewQuestionWithClosure = job => name => {
 interviewQuestionWithClosure('designer')('Jane');
 interviewQuestionWithClosure('taxi driver')('Jane');
 interviewQuestionWithClosure('teacher')('Alberto');
+
+// Bind, Call, Apply
+
+let jonh = {
+  name: 'John',
+  age: 26,
+  job: 'teacher',
+  presentation: function(style, timeOfDay) {
+    console.log(style === 'formal'
+      ? `Good ${timeOfDay}, Ladies and gentlemen! I'm ${this.name}, I'm a ${this.job} and I'm ${this.age} years old.`
+      : `Hey What's up! I'm ${this.name}, I'm a ${this.job} and I'm ${this.age} years old. Have a nice ${timeOfDay}.`);
+  }
+};
+
+let emily = {
+  name: 'Emily',
+  age: 35,
+  job: 'designer'
+};
+
+jonh.presentation('formal', 'in the morning');
+
+jonh.presentation.call(emily, 'firendly', 'afternoon');
+
+jonh.presentation.apply(emily, ['firendly', 'afternoon']);
+
+const jonhFriendly = jonh.presentation.bind(jonh, 'friendly');
+
+jonhFriendly('morning');
+jonhFriendly('night');
+
+const emilyFormal = jonh.presentation.bind(emily, 'formal');
+
+emilyFormal('afternoon');
