@@ -71,3 +71,20 @@ const teacherQuestion = interviewQuestion('teacher');
 
 (_ => console.log(Math.random() * 10 >= 5))();
 (goodLuck => console.log(Math.random() * 10 >= 5 - goodLuck))(5);
+
+// Closures
+
+const retirement = retirementAge => {
+  const a = ' years left until retirement.';
+  return yearOfBirth => {
+    const age = 2016 - yearOfBirth;
+    console.log((retirementAge - age) + a);
+    return retirementAge - age;
+  };
+};
+
+const retirementsByCountry = {
+  US: 66
+};
+
+retirement(retirementsByCountry.US)(1990);
