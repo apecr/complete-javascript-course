@@ -1,27 +1,53 @@
+/* global document */
+
 const budgetController = (_ => {
 
-  const x = 23;
+  // Some code
 
-  const add = a => a + x;
-
-  return {
-    publicTest: add
-  };
 })();
 
 const UIController = (_ => {
 
   // Some code
+  const DOMstrings = {
+    inputType: '.add__type',
+    inputDescription: '.add__description',
+    inputValue: '.add__value',
+    inputButton: '.add__btn'
+  };
+
+  return {
+    getInput: () => ({
+      type: document.querySelector(DOMstrings.inputType).value, // Will be either income or expense
+      description: document.querySelector(DOMstrings.inputDescription).value,
+      value: document.querySelector(DOMstrings.inputValue).value
+    }),
+    DOMstrings
+  };
 
 })();
 
 const appController = ((budgetCrl, UICtrl) => {
 
-  // Some code
-  const c = budgetCrl.publicTest(5);
+  const controlAddItem = _ => {
+    // TODO:
+    // 1 get the input data.
+    const input = UICtrl.getInput();
+    console.log(input);
 
-  return {
-    anotherPublic: _ => console.log(c)
+    // 2 Add the item to the budget controller.
+    // 3 Add the new item to the UI.
+    // 4 Calculate the budget.
+    // 5 Display the budget on the UI.
   };
+
+  document.querySelector(UIController.DOMstrings.inputButton).addEventListener('click', controlAddItem);
+
+
+  document.addEventListener('keypress', event => {
+    if (event.keyCode === 13 || event.which === 13) {
+      controlAddItem();
+    }
+  });
 
 })(budgetController, UIController);
