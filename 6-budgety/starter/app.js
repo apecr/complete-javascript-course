@@ -34,6 +34,9 @@ const budgetController = (_ => {
       .reduce((acc, element) => element.value + acc, 0);
 
   return {
+    deleteItem: ({type, id}) => {
+      data.items[type] = data.items[type].filter(element => element.id !== id);
+    },
     addItem: ({ type, description, value }) => {
 
       const getLastId = elements =>
@@ -93,7 +96,9 @@ const UIController = (_ => {
     budgetLabel: '.budget__value',
     incomeLabel: '.budget__income--value',
     expenseLabel: '.budget__expenses--value',
-    ratioLabel: '.budget__expenses--percentage'
+    ratioLabel: '.budget__expenses--percentage',
+    container: '.container',
+    deleteButton: '.item__delete--btn'
   };
 
   return {
@@ -199,6 +204,23 @@ const appController = ((budgetCrl, UICtrl) => {
     }
   };
 
+  const controlDeleteItem = event => {
+    const getItemAndType = id => ({
+      type: id.split('-')[0],
+      id: parseInt(id.split('-')[1])
+    });
+    const itemId = event.target.parentNode.parentNode.parentNode.parentNode.id;
+    if (itemId) {
+      const item = getItemAndType(itemId);
+
+      // 1. Delete item from the data
+
+      // 2. Delete the item from the UI
+
+      // 3. Update and show the new budget
+    }
+  };
+
   const setUpEventListeners = _ => {
     document.querySelector(UIController.DOMstrings.inputButton)
       .addEventListener('click', controlAddItem);
@@ -207,6 +229,11 @@ const appController = ((budgetCrl, UICtrl) => {
         controlAddItem();
       }
     });
+
+    // <div class="container clearfix">
+
+    document.querySelector(UIController.DOMstrings.container)
+      .addEventListener('click', controlDeleteItem);
   };
 
   return {

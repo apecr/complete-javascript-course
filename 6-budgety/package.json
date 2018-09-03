@@ -1,0 +1,16 @@
+{
+  "name": "6-budgety",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha -u tdd"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "lodash": "^4.17.10",
+    "mocha": "^5.2.0"
+  }
+}
