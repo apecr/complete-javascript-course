@@ -15,6 +15,7 @@ const budgetController = (_ => {
     this.value = value;
   };
 
+
   const data = {
     items: {
       expense: [],
@@ -23,8 +24,14 @@ const budgetController = (_ => {
     totals: {
       expense: 0,
       income: 0
-    }
+    },
+    budget: 0,
+    ratioIncomeExpense: -1
   };
+
+  const calculateTotal = type =>
+    data.items[type]
+      .reduce((acc, element) => element.value + acc, 0);
 
   return {
     addItem: ({ type, description, value }) => {
@@ -49,6 +56,23 @@ const budgetController = (_ => {
       }
     },
 
+    calculateBudget: () => {
+      // calculate total income and expenses
+      data.totals.income = calculateTotal('income');
+      data.totals.expense = calculateTotal('expense');
+
+      // calculate the budget (income - expenses)
+      data.budget = data.totals.income - data.totals.expense;
+
+      // calculate the rate between income and expense
+      data.ratioIncomeExpense = data.totals.income > 0
+        ? Math.round((data.totals.expense / data.totals.income) * 100)
+        : -1;
+      return data;
+    },
+
+    getBudget: () => data,
+
     testing: () => {
       console.log(data);
     }
@@ -72,7 +96,7 @@ const UIController = (_ => {
     getInput: () => ({
       type: document.querySelector(DOMstrings.inputType).value, // Will be either income or expense
       description: document.querySelector(DOMstrings.inputDescription).value,
-      value: document.querySelector(DOMstrings.inputValue).value
+      value: parseFloat(document.querySelector(DOMstrings.inputValue).value)
     }),
     DOMstrings,
     addListItem: ({ element, type }) => {
@@ -121,12 +145,20 @@ const UIController = (_ => {
         .querySelectorAll(`${DOMstrings.inputDescription}, ${DOMstrings.inputValue}`));
       fields.forEach(field => field.value = '');
       fields[0].focus();
-    }
+    },
+    isValidInput: ({ value, description }) =>
+      description !== '' && !isNaN(value) && value > 0
   };
 
 })();
 
 const appController = ((budgetCrl, UICtrl) => {
+
+  const updateBudgetAndDisplayInTheUI = () => {
+    // 4 Calculate the budget.
+    const budget = budgetCrl.calculateBudget();
+    console.log(budget);
+  };
 
   const controlAddItem = _ => {
     // TODO:
@@ -135,14 +167,18 @@ const appController = ((budgetCrl, UICtrl) => {
     console.log(input);
 
     // 2 Add the item to the budget controller.
-    const newItem = budgetCrl.addItem(input);
+    if (UICtrl.isValidInput(input)) {
+      const newItem = budgetCrl.addItem(input);
 
-    // 3 Add the new item to the UI and clear the fields
-    UICtrl.addListItem({element: newItem, type: input.type});
-    UICtrl.clearFields();
+      // 3 Add the new item to the UI and clear the fields
+      UICtrl.addListItem({ element: newItem, type: input.type });
+      UICtrl.clearFields();
 
-    // 4 Calculate the budget.
-    // 5 Display the budget on the UI.
+      // 4 Calculate the budget.
+      updateBudgetAndDisplayInTheUI();
+
+      // 5 Display the budget on the UI.
+    }
   };
 
   const setUpEventListeners = _ => {
@@ -157,7 +193,6 @@ const appController = ((budgetCrl, UICtrl) => {
 
   return {
     init: _ => {
-      console.log('Application started');
       setUpEventListeners();
     }
   };
