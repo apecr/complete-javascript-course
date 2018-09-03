@@ -107,7 +107,9 @@ const UIController = (_ => {
       description: document.querySelector(DOMstrings.inputDescription).value,
       value: parseFloat(document.querySelector(DOMstrings.inputValue).value)
     }),
+
     DOMstrings,
+
     addListItem: ({ element, type }) => {
       // Create html string with placeholder text
       const htmlIncome = () => `<div class="item clearfix" id="${type}-${element.id}">
@@ -149,14 +151,20 @@ const UIController = (_ => {
         .insertAdjacentHTML('beforeend', newHtml);
 
     },
+
     clearFields: () => {
       const fields = Array.prototype.slice.call(document
         .querySelectorAll(`${DOMstrings.inputDescription}, ${DOMstrings.inputValue}`));
       fields.forEach(field => field.value = '');
       fields[0].focus();
     },
+
     isValidInput: ({ value, description }) =>
       description !== '' && !isNaN(value) && value > 0,
+
+    deleteItemById: id => document.querySelector(`#${id}`).parentNode
+      .removeChild(document.querySelector(`#${id}`)),
+
     displayBudget: ({ budget, totals, ratioIncomeExpense }) => {
       const displayNumber2Decimals = num =>
         parseFloat(Math.round(num * 100) / 100).toFixed(2);
@@ -214,10 +222,14 @@ const appController = ((budgetCrl, UICtrl) => {
       const item = getItemAndType(itemId);
 
       // 1. Delete item from the data
+      budgetCrl.deleteItem(item);
 
       // 2. Delete the item from the UI
+      UICtrl.deleteItemById(itemId);
 
       // 3. Update and show the new budget
+      updateBudgetAndDisplayInTheUI();
+
     }
   };
 
