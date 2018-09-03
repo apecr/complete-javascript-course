@@ -1,148 +1,87 @@
-// Object Create
+/////////////////////////////
+// CODING CHALLENGE
 
-let personProto = {
-  calculateAge: function() {
-    console.log(2018 - this.yearOfBirth);
+
+/*
+--- Let's build a fun quiz game in the console! ---
+
+1. Build a function constructor called Question to describe a question. A question should include:
+a) question itself
+b) the answers from which the player can choose the correct one (choose an adequate data structure here, array, object, etc.)
+c) correct answer (I would use a number for this)
+
+2. Create a couple of questions using the constructor
+
+3. Store them all inside an array
+
+4. Select one random question and log it on the console, together with the possible answers (each question should have a number) (Hint: write a method for the Question objects for this task).
+
+5. Use the 'prompt' function to ask the user for the correct answer. The user should input the number of the correct answer such as you displayed it on Task 4.
+
+6. Check if the answer is correct and print to the console whether the answer is correct ot nor (Hint: write another method for this).
+
+7. Suppose this code would be a plugin for other programmers to use in their code. So make sure that all your code is private and doesn't interfere with the other programmers code (Hint: we learned a special technique to do exactly that).
+*/
+
+(_ => {
+  let questionNumber = 0;
+  let userAnswer = 0;
+  while (true) {
+    const Question = function({question, answers, correctAnswer}) {
+      this.question = question;
+      this.answers = answers;
+      this.correctAnswer = correctAnswer;
+      this.logQuestionsAndAnswers = function() {
+        console.log(this.question);
+        this.answers.forEach((answer, index) => console.log(`${index}: ${answer}`));
+      };
+      this.isAnswerCorrect = function(ans) {
+        console.log(ans == this.correctAnswer
+          ? 'Correct answer!'
+          : 'Wrong answer');
+      };
+    };
+
+    const questions = [
+      new Question({
+        question: 'Who is the best football player?',
+        answers: [
+          'Luka Modrick',
+          'Kolarov',
+          'Koke'
+        ],
+        correctAnswer: 0
+      }),
+      new Question({
+        question: 'What is the best language?',
+        answers: [
+          'English',
+          'Spanish',
+          'French'
+        ],
+        correctAnswer: 1
+      }),
+      new Question({
+        question: 'What is the best browser?',
+        answers: [
+          'Firefox',
+          'Internet Explorer',
+          'Chrome'
+        ],
+        correctAnswer: 2
+      })
+    ];
+
+    questionNumber = Math.floor(Math.random() * questions.length);
+    console.log();
+    questions[questionNumber].logQuestionsAndAnswers();
+
+    userAnswer = prompt('Please select the correct answer (just type the number). Or type exit to quit.');
+    if (userAnswer === 'exit' || userAnswer === 'quit') {
+      return;
+    }
+    questions[questionNumber].isAnswerCorrect(userAnswer);
   }
-};
-
-let john = Object.create(personProto);
-
-john.name = 'John';
-john.yearOfBirth = 1990;
-john.job = 'teacher';
-
-let jane = Object.create(personProto, {
-  name: { value: 'Jane' },
-  yearOfBirth: { value: 1969 },
-  job: { value: 'designer' }
-});
-
-// Passing functions as arguments
+})();
 
 
-const years = [1990, 1965, 1937, 2005, 1998];
-const arrayCalc = (arr, fn) => arr.map(fn);
-
-const calculateAge = yearOfBirth => 2016 - yearOfBirth;
-const isFullAge = age => age >= 18;
-const maxHeartRate = age => (age >= 18 && age <= 81) ? Math.round(206.9 - (0.67 * age)) : -1;
-
-
-const ages = arrayCalc(years, calculateAge);
-
-// console.log(years.map(calculateAge));
-const fullages = arrayCalc(ages, isFullAge);
-
-// console.log(years
-//   .map(calculateAge)
-//   .map(isFullAge));
-
-// console.log(years
-//   .map(calculateAge)
-//   .map(maxHeartRate));
-
-// Functions returning functions
-
-const interviewQuestion = job => {
-  const jobs = {
-    designer: name => console.log(`${name}, can you explain what UX design is?`),
-    teacher: name => console.log(`What subject do you teach ${name}?`)
-  };
-  return jobs.hasOwnProperty(job)
-    ? jobs[job]
-    : name => console.log(`Hello ${name}, what do you do?`);
-};
-
-const teacherQuestion = interviewQuestion('teacher');
-
-// teacherQuestion('John');
-// interviewQuestion('designer')('Jane');
-// interviewQuestion('taxi driver')('Jane');
-
-// IIFE
-
-// const game = _ => {
-//   let score = Math.random() * 10;
-//   console.log(score >= 5);
-// };
-
-// game();
-
-(_ => console.log(Math.random() * 10 >= 5))();
-(goodLuck => console.log(Math.random() * 10 >= 5 - goodLuck))(5);
-
-// Closures
-
-const retirement = retirementAge => {
-  const a = ' years left until retirement.';
-  return yearOfBirth => {
-    const age = 2016 - yearOfBirth;
-    console.log((retirementAge - age) + a);
-    return retirementAge - age;
-  };
-};
-
-const retirementsByCountry = {
-  US: 66,
-  Germany: 65,
-  Iceland: 67
-};
-
-retirement(retirementsByCountry.US)(1990);
-retirement(retirementsByCountry.Germany)(1990);
-retirement(retirementsByCountry.Iceland)(1990);
-
-const interviewQuestionWithClosure = job => name => {
-  const jobs = {
-    designer: `${name}, can you explain what UX design is?`,
-    teacher: `What subject do you teach ${name}?`
-  };
-  console.log(jobs.hasOwnProperty(job)
-    ? jobs[job]
-    : `Hello ${name}, what do you do?`);
-};
-
-interviewQuestionWithClosure('designer')('Jane');
-interviewQuestionWithClosure('taxi driver')('Jane');
-interviewQuestionWithClosure('teacher')('Alberto');
-
-// Bind, Call, Apply
-
-let jonh = {
-  name: 'John',
-  age: 26,
-  job: 'teacher',
-  presentation: function(style, timeOfDay) {
-    console.log(style === 'formal'
-      ? `Good ${timeOfDay}, Ladies and gentlemen! I'm ${this.name}, I'm a ${this.job} and I'm ${this.age} years old.`
-      : `Hey What's up! I'm ${this.name}, I'm a ${this.job} and I'm ${this.age} years old. Have a nice ${timeOfDay}.`);
-  }
-};
-
-let emily = {
-  name: 'Emily',
-  age: 35,
-  job: 'designer'
-};
-
-jonh.presentation('formal', 'in the morning');
-
-jonh.presentation.call(emily, 'firendly', 'afternoon');
-
-jonh.presentation.apply(emily, ['firendly', 'afternoon']);
-
-const jonhFriendly = jonh.presentation.bind(jonh, 'friendly');
-
-jonhFriendly('morning');
-jonhFriendly('night');
-
-const emilyFormal = jonh.presentation.bind(emily, 'formal');
-
-emilyFormal('afternoon');
-
-let ages2 = arrayCalc(years, calculateAge);
-console.log(ages2);
-const isFullAgeWitLimit = (limit, age) => age >= limit;
-const fullAges = arrayCalc(ages2, isFullAgeWitLimit.bind(this, 20));
-console.log(fullAges);
