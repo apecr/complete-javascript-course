@@ -89,7 +89,11 @@ const UIController = (_ => {
     inputValue: '.add__value',
     inputButton: '.add__btn',
     incomeContainer: '.income__list',
-    expensesContainer: '.expenses__list'
+    expensesContainer: '.expenses__list',
+    budgetLabel: '.budget__value',
+    incomeLabel: '.budget__income--value',
+    expenseLabel: '.budget__expenses--value',
+    ratioLabel: '.budget__expenses--percentage'
   };
 
   return {
@@ -147,7 +151,21 @@ const UIController = (_ => {
       fields[0].focus();
     },
     isValidInput: ({ value, description }) =>
-      description !== '' && !isNaN(value) && value > 0
+      description !== '' && !isNaN(value) && value > 0,
+    displayBudget: ({ budget, totals, ratioIncomeExpense }) => {
+      const displayNumber2Decimals = num =>
+        parseFloat(Math.round(num * 100) / 100).toFixed(2);
+      document.querySelector(DOMstrings.budgetLabel).textContent =
+      displayNumber2Decimals(budget);
+      document.querySelector(DOMstrings.incomeLabel).textContent =
+      displayNumber2Decimals(totals.income);
+      document.querySelector(DOMstrings.expenseLabel).textContent =
+      displayNumber2Decimals(totals.expense);
+      document.querySelector(DOMstrings.ratioLabel).textContent =
+      ratioIncomeExpense > 0
+        ? `${ratioIncomeExpense}%`
+        : '---';
+    }
   };
 
 })();
@@ -157,7 +175,7 @@ const appController = ((budgetCrl, UICtrl) => {
   const updateBudgetAndDisplayInTheUI = () => {
     // 4 Calculate the budget.
     const budget = budgetCrl.calculateBudget();
-    console.log(budget);
+    UIController.displayBudget(budget);
   };
 
   const controlAddItem = _ => {
@@ -193,6 +211,12 @@ const appController = ((budgetCrl, UICtrl) => {
 
   return {
     init: _ => {
+      UIController.displayBudget({
+        budget: 0, totals: {
+          income: 0,
+          expense: 0
+        }, ratioIncomeExpense: 0
+      });
       setUpEventListeners();
     }
   };
