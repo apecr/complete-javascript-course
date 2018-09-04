@@ -7,6 +7,17 @@ const budgetController = (_ => {
     this.id = id;
     this.description = description;
     this.value = value;
+    this.percentage = -1;
+  };
+
+  Expense.prototype.calculatePercentage = function(totalIncome) {
+    this.percentage = totalIncome > 0
+      ? Math.round((this.value / totalIncome) * 100)
+      : -1;
+  };
+
+  Expense.prototype.getPercentage = function() {
+    return this.percentage;
   };
 
   const Income = function({ id, description, value }) {
@@ -34,7 +45,7 @@ const budgetController = (_ => {
       .reduce((acc, element) => element.value + acc, 0);
 
   return {
-    deleteItem: ({type, id}) => {
+    deleteItem: ({ type, id }) => {
       data.items[type] = data.items[type].filter(element => element.id !== id);
     },
     addItem: ({ type, description, value }) => {
@@ -58,6 +69,15 @@ const budgetController = (_ => {
         return data.items[type][data.items[type].length - 1];
       }
     },
+
+    calculatePercentages: () => {
+      const totalIncome = calculateTotal('income');
+      data.items.expense
+        .forEach(expense => expense.calculatePercentage(totalIncome));
+    },
+
+    getPercentages: () =>
+      data.items.expense.map(expense => expense.getPercentage()),
 
     calculateBudget: () => {
       // calculate total income and expenses
@@ -169,15 +189,15 @@ const UIController = (_ => {
       const displayNumber2Decimals = num =>
         parseFloat(Math.round(num * 100) / 100).toFixed(2);
       document.querySelector(DOMstrings.budgetLabel).textContent =
-      displayNumber2Decimals(budget);
+        displayNumber2Decimals(budget);
       document.querySelector(DOMstrings.incomeLabel).textContent =
-      displayNumber2Decimals(totals.income);
+        displayNumber2Decimals(totals.income);
       document.querySelector(DOMstrings.expenseLabel).textContent =
-      displayNumber2Decimals(totals.expense);
+        displayNumber2Decimals(totals.expense);
       document.querySelector(DOMstrings.ratioLabel).textContent =
-      ratioIncomeExpense > 0
-        ? `${ratioIncomeExpense}%`
-        : '---';
+        ratioIncomeExpense > 0
+          ? `${ratioIncomeExpense}%`
+          : '---';
     }
   };
 
@@ -185,10 +205,25 @@ const UIController = (_ => {
 
 const appController = ((budgetCrl, UICtrl) => {
 
-  const updateBudgetAndDisplayInTheUI = () => {
+  const updatePercentagesAndDisplayInTheUI = () => {
+    // 1. Calculate the percentages
+    budgetCrl.calculatePercentages();
+
+    // 2. Read percentages from the budget controller
+    const percentages = budgetCrl.getPercentages();
+    console.log('Percentages');
+    console.log(percentages);
+
+    // 3. Update the UI with the new percentages
+
+  };
+
+  const updateBudgetAndPercentagesAndDisplayInTheUI = () => {
     // 4 Calculate the budget.
     const budget = budgetCrl.calculateBudget();
     UIController.displayBudget(budget);
+
+    updatePercentagesAndDisplayInTheUI();
   };
 
   const controlAddItem = _ => {
@@ -206,11 +241,12 @@ const appController = ((budgetCrl, UICtrl) => {
       UICtrl.clearFields();
 
       // 4 Calculate the budget.
-      updateBudgetAndDisplayInTheUI();
+      updateBudgetAndPercentagesAndDisplayInTheUI();
 
       // 5 Display the budget on the UI.
     }
   };
+
 
   const controlDeleteItem = event => {
     const getItemAndType = id => ({
@@ -228,7 +264,7 @@ const appController = ((budgetCrl, UICtrl) => {
       UICtrl.deleteItemById(itemId);
 
       // 3. Update and show the new budget
-      updateBudgetAndDisplayInTheUI();
+      updateBudgetAndPercentagesAndDisplayInTheUI();
 
     }
   };

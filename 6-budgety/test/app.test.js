@@ -1,6 +1,52 @@
 const expect = require('chai').expect;
 
 /* global define, it, describe, before, beforeEach, afterEach, after */
+const Income = function({ id, description, value }) {
+  this.id = id;
+  this.description = description;
+  this.value = value;
+};
+const Expense = function({ id, description, value }) {
+  this.id = id;
+  this.description = description;
+  this.value = value;
+  this.percentage = -1;
+};
+
+Expense.prototype.calculatePercentage = function(totalIncome) {
+  this.percentage = totalIncome > 0
+    ? Math.round((this.value / totalIncome) * 100)
+    : -1;
+};
+
+Expense.prototype.getPercentage = function() {
+  return this.percentage;
+};
+let data = {
+  items: {
+    expense: [],
+    income: []
+  },
+  totals: {
+    expense: 0,
+    income: 0
+  },
+  budget: 0,
+  ratioIncomeExpense: -1
+};
+
+const calculateTotal = type =>
+  data.items[type]
+    .reduce((acc, element) => element.value + acc, 0);
+
+const calculatePercentages = () => {
+  const totalIncome = calculateTotal('income');
+  data.items.expense
+    .forEach(expense => expense.calculatePercentage(totalIncome));
+};
+
+const getPercentages = () =>
+  data.items.expense.map(expense => expense.getPercentage());
 
 describe('Test suite', () => {
   const getItemAndType = id => ({
@@ -18,5 +64,32 @@ describe('Test suite', () => {
       type: 'expense',
       id: 2
     });
+  });
+});
+
+describe('Testing expenses', () => {
+  data = {
+    budget: 2700,
+    items: {
+      expense: [
+        new Expense({id: 0, description: 'Holidays', value: 400}),
+        new Expense({id: 1, description: 'Rent', value: 1200})
+      ],
+      income: [
+        new Income({id: 0, description: 'Salary', value: 200}),
+        new Income({id: 1, description: 'Refund', value: 200}),
+        new Income({id: 2, description: 'New stakeholder', value: 2000})
+      ],
+      ratioIncomeExpense: 37
+    },
+    totals: {expense: 1600, income: 2400}
+  };
+  it('Should calculate the percentages', () => {
+    calculatePercentages();
+    expect(data.items.expense[0].percentage).to.not.be.equal(-1);
+  });
+  it('Should get the percentages', () => {
+    calculatePercentages();
+    expect(getPercentages()[0]).to.be.equal(17);
   });
 });
