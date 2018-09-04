@@ -118,7 +118,8 @@ const UIController = (_ => {
     expenseLabel: '.budget__expenses--value',
     ratioLabel: '.budget__expenses--percentage',
     container: '.container',
-    deleteButton: '.item__delete--btn'
+    deleteButton: '.item__delete--btn',
+    expensesPercentageLabel: '.item__percentage'
   };
 
   return {
@@ -198,6 +199,15 @@ const UIController = (_ => {
         ratioIncomeExpense > 0
           ? `${ratioIncomeExpense}%`
           : '---';
+    },
+
+    displayPercentages: (percentages) => {
+      const fields = document.querySelectorAll(DOMstrings.expensesPercentageLabel);
+      Array.prototype.forEach.call(fields, (field, index) => {
+        field.textContent = percentages[index] > 0
+          ? `${percentages[index]}%`
+          : '---';
+      });
     }
   };
 
@@ -215,6 +225,7 @@ const appController = ((budgetCrl, UICtrl) => {
     console.log(percentages);
 
     // 3. Update the UI with the new percentages
+    UICtrl.displayPercentages(percentages);
 
   };
 
