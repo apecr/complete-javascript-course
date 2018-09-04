@@ -122,6 +122,26 @@ const UIController = (_ => {
     expensesPercentageLabel: '.item__percentage'
   };
 
+  const getTypeFromNumber = number => number > 0 ? 'income' : 'expense';
+
+  const formatNumber = (number, intType) => {
+    const perfixByType = {
+      expense: '-',
+      income: '+'
+    };
+    const numberString = Math.abs(number).toFixed(2);
+    const numberSections = numberString.split('.');
+    const integer = numberSections[0];
+    const decimal = numberSections[1];
+    const finalIntegerString = [ ...integer ].reverse().map((numberInt, index) => {
+      if (index % 3 === 0 && index !== 0) {
+        return `${numberInt},`;
+      }
+      return numberInt;
+    }).reverse().join('');
+    return `${perfixByType[intType]} ${finalIntegerString}.${decimal}`;
+  };
+
   return {
     getInput: () => ({
       type: document.querySelector(DOMstrings.inputType).value, // Will be either income or expense
@@ -136,7 +156,7 @@ const UIController = (_ => {
       const htmlIncome = () => `<div class="item clearfix" id="${type}-${element.id}">
       <div class="item__description">${element.description}</div>
       <div class="right clearfix">
-          <div class="item__value">${element.value}</div>
+          <div class="item__value">${formatNumber(element.value, type)}</div>
           <div class="item__delete">
               <button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button>
           </div>
@@ -145,7 +165,7 @@ const UIController = (_ => {
       const htmlExpense = () => `<div class="item clearfix" id="${type}-${element.id}">
         <div class="item__description">${element.description}</div>
         <div class="right clearfix">
-            <div class="item__value">${element.value}</div>
+            <div class="item__value">${formatNumber(element.value, type)}</div>
             <div class="item__percentage">21%</div>
             <div class="item__delete">
                 <button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button>
@@ -170,7 +190,6 @@ const UIController = (_ => {
       // Insert the HTML into the DOM
       document.querySelector(htmlByType[type].element)
         .insertAdjacentHTML('beforeend', newHtml);
-
     },
 
     clearFields: () => {
@@ -190,11 +209,11 @@ const UIController = (_ => {
       const displayNumber2Decimals = num =>
         parseFloat(Math.round(num * 100) / 100).toFixed(2);
       document.querySelector(DOMstrings.budgetLabel).textContent =
-        displayNumber2Decimals(budget);
+        formatNumber(budget, getTypeFromNumber(budget));
       document.querySelector(DOMstrings.incomeLabel).textContent =
-        displayNumber2Decimals(totals.income);
+        formatNumber(totals.income, 'income');
       document.querySelector(DOMstrings.expenseLabel).textContent =
-        displayNumber2Decimals(totals.expense);
+        formatNumber(totals.expense, 'expense');
       document.querySelector(DOMstrings.ratioLabel).textContent =
         ratioIncomeExpense > 0
           ? `${ratioIncomeExpense}%`

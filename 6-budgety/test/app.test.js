@@ -93,3 +93,29 @@ describe('Testing expenses', () => {
     expect(getPercentages()[0]).to.be.equal(17);
   });
 });
+
+describe('Formating numbers', () => {
+  const formatNumber = (number, type) => {
+    const perfixByType = {
+      expense: '-',
+      income: '+'
+    };
+    const numberString = Math.abs(number).toFixed(2);
+    const numberSections = numberString.split('.');
+    const integer = numberSections[0];
+    const decimal = numberSections[1];
+    const finalIntegerString = [ ...integer ].reverse().map((numberInt, index) => {
+      if (index % 3 === 0 && index !== 0) {
+        return `${numberInt},`;
+      }
+      return numberInt;
+    }).reverse().join('');
+    return `${perfixByType[type]} ${finalIntegerString}.${decimal}`;
+  };
+  it('Should return a correct format number', () => {
+    expect(formatNumber(2100.3456, 'income')).to.be.equal('+ 2,100.35');
+  });
+  it('Should return a correct format number expense', () => {
+    expect(formatNumber(4567892100.3456, 'expense')).to.be.equal('- 4,567,892,100.35');
+  });
+});
