@@ -119,7 +119,8 @@ const UIController = (_ => {
     ratioLabel: '.budget__expenses--percentage',
     container: '.container',
     deleteButton: '.item__delete--btn',
-    expensesPercentageLabel: '.item__percentage'
+    expensesPercentageLabel: '.item__percentage',
+    dateLabel: '.budget__title--month'
   };
 
   const getTypeFromNumber = number => number > 0 ? 'income' : 'expense';
@@ -227,6 +228,26 @@ const UIController = (_ => {
           ? `${percentages[index]}%`
           : '---';
       });
+    },
+
+    displayDate: () => {
+      const now = new Date();
+      const month = now.getUTCMonth();
+      const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'
+      ];
+      var year = now.getUTCFullYear();
+      document.querySelector(DOMstrings.dateLabel).textContent = `${monthNames[month]} ${year}`;
+    },
+
+    changedType: event => {
+      const fields = document.querySelectorAll(
+        [DOMstrings.inputType, DOMstrings.inputDescription, DOMstrings.inputValue].join()
+      );
+      Array.prototype.forEach.call(fields, field => {
+        field.classList.toggle('red-focus');
+      });
+      document.querySelector(DOMstrings.inputButton).classList.toggle('red');
     }
   };
 
@@ -308,10 +329,11 @@ const appController = ((budgetCrl, UICtrl) => {
       }
     });
 
-    // <div class="container clearfix">
-
     document.querySelector(UIController.DOMstrings.container)
       .addEventListener('click', controlDeleteItem);
+
+    document.querySelector(UIController.DOMstrings.inputType)
+      .addEventListener('change', UIController.changedType);
   };
 
   return {
@@ -322,6 +344,7 @@ const appController = ((budgetCrl, UICtrl) => {
           expense: 0
         }, ratioIncomeExpense: 0
       });
+      UIController.displayDate();
       setUpEventListeners();
     }
   };
