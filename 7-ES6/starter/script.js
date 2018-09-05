@@ -1,34 +1,23 @@
+// Defautl parameters in ES5
 
-/* global document */
-// ES5
-
-var box5 = {
-    color: 'green',
-    position: 1,
-    clickMe: function(){
-
-        var self = this;
-        document.querySelector('.green').addEventListener('click', function(){
-            var str = `This is box number ${self.position} and it is ${self.color}`;
-            alert(str);
-        });
-    }
+function SmithPerson5(firstName, yearOfBirth, lastName, nationality) {
+  this.firstName = firstName;
+  this.yearOfBirth = yearOfBirth;
+  this.lastName = lastName === undefined ? 'Smith' : lastName;
+  this.nationality = nationality === undefined ? 'American' : nationality;
 }
 
-// box5.clickMe();
+var john = new SmithPerson5('John', 1990);
+var emily = new SmithPerson5('Emily', 1992, 'Diaz', 'Spanish');
 
-// ES6
+// Default parameters in ES6
 
-const box6 = {
-    color: 'green',
-    position: 1,
-    clickMe: function(){
-
-        document.querySelector('.green').addEventListener('click', () => {
-            var str = `This is box number ${this.position} and it is ${this.color}`;
-            alert(str);
-        });
-    }
+function SmithPerson6(firstName, yearOfBirth, lastName = 'Smith', nationality = 'American') {
+  this.firstName = firstName;
+  this.yearOfBirth = yearOfBirth;
+  this.lastName = lastName;
+  this.nationality = nationality;
 }
 
-box6.clickMe();
+var john6 = new SmithPerson6('John', 1990);
+var emily6 = new SmithPerson6('Emily', 1992, 'Diaz', 'Spanish');
