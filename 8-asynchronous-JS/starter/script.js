@@ -22,12 +22,23 @@ const getRelated = publisher => {
   });
 };
 
-getIds()
-  .then(ids => ids[2])
-  .then(getRecipe)
-  .then(recipe => {
-    console.log(recipe);
-    return recipe.publisher;
-  })
-  .then(getRelated)
-  .then(console.log);
+// getIds()
+//   .then(ids => ids[2])
+//   .then(getRecipe)
+//   .then(recipe => {
+//     console.log(recipe);
+//     return recipe.publisher;
+//   })
+//   .then(getRelated)
+//   .then(console.log);
+
+const getRecipesAW = async() => {
+  const ids = await getIds();
+  console.log(ids);
+  const recipe = await getRecipe(ids[2]);
+  console.log(recipe);
+  const recipeRelated = await getRelated(recipe.publisher);
+  console.log(recipeRelated);
+};
+
+getRecipesAW();
