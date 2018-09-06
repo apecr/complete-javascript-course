@@ -1,25 +1,33 @@
-const getRecipe = () => {
+const getIds = () => new Promise(resolve => {
   setTimeout(() => {
-    const recipeId = [523, 883, 432, 974];
-    console.log(recipeId);
-
-    setTimeout(id => {
-      const recipe = {
-        title: 'Fresh tomato pasta',
-        publisher: 'Jonas',
-        id
-      };
-      console.log(recipe);
-
-      setTimeout(publisher => {
-        const recipe2 = {
-          title: 'Italian Pizza',
-          publisher
-        };
-        console.log(recipe2);
-      }, 1500, recipe.publisher);
-    }, 1500, recipeId[2]);
+    resolve([523, 883, 432, 974]);
   }, 1500);
+});
+
+const getRecipe = recipeID =>
+  new Promise(resolve =>
+    setTimeout(
+      id => resolve({ title: 'Fresh tomato pasta', publisher: 'Joan', id }),
+      1500,
+      recipeID
+    )
+  );
+
+const getRelated = publisher => {
+  return new Promise(resolve => {
+    setTimeout(
+      pub => resolve({ title: 'Italian Pizza', publisher: pub })
+      , 1500, publisher
+    );
+  });
 };
 
-getRecipe();
+getIds()
+  .then(ids => ids[2])
+  .then(getRecipe)
+  .then(recipe => {
+    console.log(recipe);
+    return recipe.publisher;
+  })
+  .then(getRelated)
+  .then(console.log);
