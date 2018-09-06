@@ -1,15 +1,16 @@
-const second = _ => {
+const getRecipe = () => {
   setTimeout(() => {
-    console.log('Async');
-  }, 2000);
+    const recipeId = [523, 883, 432, 974];
+    console.log(recipeId);
+    setTimeout((id) => {
+      const recipe = {
+        title: 'Fresh tomato pasta',
+        publisher: 'Jonas',
+        id
+      };
+      console.log(recipe);
+    }, 1000, recipeId[2]);
+  }, 1500);
 };
-const first = _ => {
-  console.log('Hey there');
-  second();
-  console.log('The end');
-};
-first();
 
-const A = true;
-const B = false;
-console.log(!(A || !B) && (A && !B && A) || (A || B));
+getRecipe();
