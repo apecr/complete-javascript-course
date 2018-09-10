@@ -1,4 +1,9 @@
 // Global app controller
-import num from './test';
+import str from './models/Search';
 
-console.log(`I imported ${num} from another module`);
+// import {add, multiply, ID} from './views/searchView';
+import * as searchView from './views/searchView';
+
+console.log(`Using imported functions! Add ${searchView.ID} and 2: ${searchView.add(searchView.ID, 2)}`);
+console.log(`Using imported functions! Multiply 12 and 2: ${searchView.multiply(12, 2)}`);
+console.log(`Using imported default! ${str}`);
