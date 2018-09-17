@@ -1,9 +1,18 @@
 // Global app controller
-import str from './models/Search';
+//4123db471815928653437ec47bf2744b
+//https://www.food2fork.com/api/search
+import axios from 'axios';
 
-// import {add, multiply, ID} from './views/searchView';
-import * as searchView from './views/searchView';
+const key = '4123db471815928653437ec47bf2744b';
 
-console.log(`Using imported functions! Add ${searchView.ID} and 2: ${searchView.add(searchView.ID, 2)}`);
-console.log(`Using imported functions! Multiply 12 and 2: ${searchView.multiply(12, 2)}`);
-console.log(`Using imported default! ${str}`);
+const getResults = async query => {
+  try {
+    const response = await axios(`https://www.food2fork.com/api/search?key=${key}&q=${query}`);
+    console.log(response);
+  } catch (e) {
+    console.log(e);
+  }
+
+};
+
+getResults('galician');
