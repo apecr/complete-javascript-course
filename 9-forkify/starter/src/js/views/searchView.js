@@ -1,11 +1,12 @@
 import {elements} from './base';
 
+const limitRecipeTitle = (title, limit = 17) => title.length > limit
+  ? `${title.split(' ').reduce((acc, word) => {
+    return acc.length + word.length > limit ? acc : `${acc}${word} `;
+  }, '').trim()} ...`
+  : title;
 
 const renderRecipe = recipe => {
-  // image_url
-  // publisher
-  // recipe_id
-  // title
   const markup = ` 
         <li>
             <a class="results__link" href="#${recipe.recipe_id}">
@@ -13,7 +14,7 @@ const renderRecipe = recipe => {
                     <img src="${recipe.image_url}" alt="${recipe.title}">
                 </figure>
                 <div class="results__data">
-                    <h4 class="results__name">${recipe.title}</h4>
+                    <h4 class="results__name">${limitRecipeTitle(recipe.title)}</h4>
                     <p class="results__author">${recipe.publisher}</p>
                 </div>
             </a>
