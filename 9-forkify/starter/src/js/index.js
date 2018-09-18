@@ -1,18 +1,37 @@
 // Global app controller
 //4123db471815928653437ec47bf2744b
 //https://www.food2fork.com/api/search
-import axios from 'axios';
 
-const key = '4123db471815928653437ec47bf2744b';
+/* global document */
 
-const getResults = async query => {
-  try {
-    const response = await axios(`https://www.food2fork.com/api/search?key=${key}&q=${query}`);
-    console.log(response);
-  } catch (e) {
-    console.log(e);
-  }
+import Search from './models/Search';
+
+/**
+ * - Search object
+ * - Current recipe object
+ * - Shopping list object
+ * - Liked recipes
+ */
+const state = {};
+
+const controlSearch = async _ => {
+  // 1) Get the query from the view
+  const query = 'pizza'; //TODO: get the current value of the search input
+
+  // 2) New search object and add to state
+  state.search = new Search(query);
+
+  // 3) Prepare UI for results
+
+  // 4) Search for recipes
+  await state.search.getResults();
+
+  // 5) Render the results in the UI
+  console.log(state.search.result);
 
 };
 
-getResults('galician');
+document.querySelector('.search').addEventListener('submit', event => {
+  event.preventDefault();
+  controlSearch();
+});
