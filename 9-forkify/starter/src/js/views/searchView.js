@@ -25,14 +25,16 @@ const renderRecipe = recipe => {
 
 export const getInput = __ => elements.searchInput.value;
 
-export const renderRecipes = recipes => {
-  recipes.forEach(renderRecipe);
-};
-
 export const clearInput = _ => {
   elements.searchInput.value = '';
 };
 
 export const clearResults = _ => {
   elements.searchResultList.innerHTML = '';
+};
+
+export const renderRecipes = ({recipes, page = 1, resPerPage = 10}) => {
+  const start = (page - 1) * resPerPage;
+  const end = page * resPerPage;
+  recipes.slice(start, end).forEach(renderRecipe);
 };

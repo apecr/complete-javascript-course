@@ -5,7 +5,7 @@
 /* global document */
 
 import Search from './models/Search';
-import {elements} from './views/base';
+import {elements, renderLoader, clearLoader} from './views/base';
 import * as searchView from './views/searchView';
 
 /**
@@ -27,12 +27,14 @@ const controlSearch = async _ => {
     // 3) Prepare UI for results
     searchView.clearInput();
     searchView.clearResults();
+    renderLoader(elements.searchRes);
 
     // 4) Search for recipes
     await state.search.getResults();
+    clearLoader();
 
     // 5) Render the results in the UI
-    searchView.renderRecipes(state.search.result);
+    searchView.renderRecipes({recipes: state.search.result});
 
   }
 
