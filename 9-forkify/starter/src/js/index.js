@@ -5,6 +5,7 @@
 /* global document */
 
 import Search from './models/Search';
+import Recipe from './models/Recipe';
 import { elements, renderLoader, clearLoader } from './views/base';
 import * as searchView from './views/searchView';
 
@@ -55,3 +56,11 @@ elements.searchResPages.addEventListener('click', e => {
     searchView.renderRecipes({ recipes: state.search.result, page: parseInt(goToPage) });
   }
 });
+
+
+/**
+ * RECIPE CONTROLLER
+ */
+
+const r = new Recipe('2658');
+r.getRecipe();
