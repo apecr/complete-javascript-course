@@ -2,7 +2,7 @@
 //4123db471815928653437ec47bf2744b
 //https://www.food2fork.com/api/search
 
-/* global document */
+/* global document, window */
 
 import Search from './models/Search';
 import Recipe from './models/Recipe';
@@ -62,5 +62,28 @@ elements.searchResPages.addEventListener('click', e => {
  * RECIPE CONTROLLER
  */
 
-const r = new Recipe('2658');
-r.getRecipe();
+const controlRecipe = async _ => {
+  // Get ID from url
+  const hashId = window.location.hash.replace('#', '');
+  console.log(hashId);
+
+  if (hashId) {
+    // Prepare UI for changes
+
+    // Create new recipe object
+    state.recipe = new Recipe(hashId);
+
+    // Get recipe data
+    await state.recipe.getRecipe();
+
+    // Calculate servings and time
+    state.recipe.calcTime();
+    state.recipe.calcServings();
+
+    // Render the recipe
+    console.log(state.recipe);
+  }
+};
+
+['hashchange', 'load']
+  .forEach(event => window.addEventListener(event, controlRecipe));
