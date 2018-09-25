@@ -1,5 +1,6 @@
 import axios from 'axios';
-import {key, foodUrl} from './../config';
+import { key, foodUrl } from './../config';
+import _ from 'lodash';
 
 export default class Recipe {
   constructor(id) {
@@ -34,5 +35,81 @@ export default class Recipe {
 
   calcServings() {
     this.servings = 4;
+  }
+
+  parseIngredients() {
+    const units = {
+      tablespoons: {
+        long: 'tablespoons',
+        short: 'tbsp'
+      },
+      tablespoon: {
+        long: 'tablespoon',
+        short: 'tbsp'
+      },
+      ounce: {
+        long: 'ounce',
+        short: 'oz'
+      },
+      ounces: {
+        long: 'ounces',
+        short: 'oz'
+      },
+      teaspoon: {
+        long: 'teaspoon',
+        short: 'tsp'
+      },
+      teaspoons: {
+        long: 'teaspoons',
+        short: 'tsp'
+      },
+      cups: {
+        long: 'cups',
+        short: 'cup'
+      },
+      pounds: {
+        long: 'pounds',
+        short: 'pound'
+      },
+    };
+
+    this.ingredients = this.ingredients.map(ingredient => {
+
+      // 1 Uniform units
+      Object.keys(units).forEach(unit => {
+        ingredient = ingredient.toLowerCase().replace(units[unit].long, units[unit].short);
+      });
+
+      // 2 Remove parentheses
+      ingredient = ingredient.replace(/ *\([^)]*\) */g, ' ');
+
+      // 3 Parse ingredients into count, unit and ingredient
+      const arrIng = ingredient.split(' ');
+      const unitsShortArray = Object.keys(units).map(unit => units[unit].short);
+      const unitIndex = arrIng
+        .findIndex(ingWord => unitsShortArray.includes(ingWord));
+      let objIng;
+      if (unitIndex > -1) {
+        objIng = {
+          count: 1,
+          unit: '',
+          ingredient
+        };
+      } else if (parseInt(arrIng[0], 10)) {
+        // There is a unit
+        objIng = {
+          count: parseInt(arrIng[0], 10),
+          unit: '',
+          ingredient: arrIng.slice(1).join(' ')
+        };
+      } else if (unitIndex === -1) {
+        objIng = {
+          count: 1,
+          unit: '',
+          ingredient
+        };
+      }
+      return ingredient;
+    });
   }
 }
