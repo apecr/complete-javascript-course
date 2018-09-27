@@ -12,6 +12,6 @@ describe('Testing Recipe', () => {
     recipe1.parseIngredients();
 
     recipe1.ingredients.forEach(ing => console.log(ing));
-    expect(recipe1.ingredients[3].includes('(')).to.be.equal(false);
+    expect(recipe1.ingredients[3].ingredient.includes('(')).to.be.equal(false);
   });
 });
