@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { key, foodUrl } from './../config';
 import _ from 'lodash';
+import numericQuantity from 'numeric-quantity';
 
 export default class Recipe {
   constructor(id) {
@@ -90,10 +91,11 @@ export default class Recipe {
         .findIndex(ingWord => unitsShortArray.includes(ingWord));
       let objIng;
       if (unitIndex > -1) {
+        const arrCount = arrIng.slice(0, unitIndex);
         objIng = {
-          count: 1,
-          unit: '',
-          ingredient
+          count: numericQuantity(arrCount.join(' ').replace('-', ' ')),
+          unit: arrIng[unitIndex],
+          ingredient: arrIng.slice(unitIndex + 1).join(' ')
         };
       } else if (parseInt(arrIng[0], 10)) {
         // There is a unit
@@ -109,7 +111,7 @@ export default class Recipe {
           ingredient
         };
       }
-      return ingredient;
+      return objIng;
     });
   }
 }
