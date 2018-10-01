@@ -13,7 +13,7 @@ export default class Recipe {
       const res = await axios(`${foodUrl}/api/get?key=${key}&rId=${this.id}`);
       (
         {
-          image_url: this.url,
+          image_url: this.img,
           f2f_url: this.f2f_url,
           ingredients: this.ingredients,
           publisher: this.publisher,

@@ -8,6 +8,7 @@ import Search from './models/Search';
 import Recipe from './models/Recipe';
 import { elements, renderLoader, clearLoader } from './views/base';
 import * as searchView from './views/searchView';
+import * as recipeView from './views/recipeView';
 
 /**
  * - Search object
@@ -65,17 +66,17 @@ elements.searchResPages.addEventListener('click', e => {
 const controlRecipe = async _ => {
   // Get ID from url
   const hashId = window.location.hash.replace('#', '');
-  console.log(hashId);
 
   if (hashId) {
     // Prepare UI for changes
+    recipeView.clearRecipe();
+    renderLoader(elements.recipe);
 
     // Create new recipe object
     state.recipe = new Recipe(hashId);
 
     // Get recipe data
     await state.recipe.getRecipe();
-    console.log(state.recipe.ingredients);
     state.recipe.parseIngredients();
 
     // Calculate servings and time
@@ -83,7 +84,8 @@ const controlRecipe = async _ => {
     state.recipe.calcServings();
 
     // Render the recipe
-    console.log(state.recipe.ingredients);
+    clearLoader();
+    recipeView.renderRecipe(state.recipe);
   }
 };
 

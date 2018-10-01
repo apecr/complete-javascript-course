@@ -8,7 +8,7 @@ describe('Testing Recipe', () => {
   it('Should create a recipe', async() => {
     const recipe1 = new Recipe(2658);
     await recipe1.getRecipe();
-    expect(recipe1.url).to.be.equal('http://static.food2fork.com/14573f089.jpg');
+    expect(recipe1.img).to.be.equal('http://static.food2fork.com/14573f089.jpg');
     recipe1.parseIngredients();
 
     recipe1.ingredients.forEach(ing => console.log(ing));

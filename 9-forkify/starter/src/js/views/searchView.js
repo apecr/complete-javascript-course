@@ -72,6 +72,11 @@ const renderButtons = ({ page, numResults, resPerPage }) => {
         func: lastPageButton
       }
     ];
+    if (!pagesConditions
+      .find(conditionAndFunction =>
+        conditionAndFunction.cond(pageCond))) {
+      return _ => '';
+    }
     return pagesConditions
       .find(conditionAndFunction =>
         conditionAndFunction.cond(pageCond)).func;
