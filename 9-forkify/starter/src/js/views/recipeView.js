@@ -1,6 +1,8 @@
 import { elements } from './base';
 import { Fraction } from 'fractional';
 
+/* global document */
+
 export const clearRecipe = _ => {
   elements.recipe.innerHTML = '';
 };
@@ -63,12 +65,12 @@ export const renderRecipe = recipe => {
                 <span class="recipe__info-text"> servings</span>
 
                 <div class="recipe__info-buttons">
-                    <button class="btn-tiny">
+                    <button class="btn-tiny btn-decrease">
                         <svg>
                             <use href="img/icons.svg#icon-circle-with-minus"></use>
                         </svg>
                     </button>
-                    <button class="btn-tiny">
+                    <button class="btn-tiny btn-increase">
                         <svg>
                             <use href="img/icons.svg#icon-circle-with-plus"></use>
                         </svg>
@@ -115,4 +117,17 @@ export const renderRecipe = recipe => {
 
   elements.recipe.insertAdjacentHTML('afterbegin', markup);
 
+};
+
+export const updateServingsIngredients = recipe => {
+  // Update servings
+  document.querySelector('.recipe__info-data--people').textContent = recipe.servings;
+
+  // Update ingredients
+  Array
+    .from(document.querySelectorAll('.recipe__count'))
+    .forEach((element, index) => {
+      element.textContent = formatCount(recipe.ingredients[index].count);
+    });
+  document.querySelector('.recipe__info-data--people').textContent = recipe.servings;
 };

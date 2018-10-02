@@ -114,4 +114,16 @@ export default class Recipe {
       return objIng;
     });
   }
+
+  updateServingsAndIngredients(type) {
+    // Servings
+    const newServings = type === 'dec' ? this.servings - 1 : this.servings + 1;
+
+    // Ingredients
+    this.ingredients = this.ingredients.map(ing => {
+      ing.count *= (newServings / this.servings);
+
+    });
+    this.servings = newServings;
+  }
 }
