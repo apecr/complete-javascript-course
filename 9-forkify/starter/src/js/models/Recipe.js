@@ -122,7 +122,7 @@ export default class Recipe {
     // Ingredients
     this.ingredients = this.ingredients.map(ing => {
       ing.count *= (newServings / this.servings);
-
+      return ing;
     });
     this.servings = newServings;
   }
