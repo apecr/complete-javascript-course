@@ -5,15 +5,15 @@ export default class List {
     this.items = [];
   }
 
-  addItem({count, unit, ingredient}) {
-    return this.items[this.items.push({count, unit, ingredient, id: uniqid()}) - 1];
+  addItem({ count, unit, ingredient }) {
+    return this.items[this.items.push({ count, unit, ingredient, id: uniqid() }) - 1];
   }
 
   deleteItem(id) {
     this.items = this.items.filter(element => element.id !== id);
   }
 
-  updateCount({id, newCount}) {
-    this.items.find(el => el.id === id).count = newCount;
+  updateCount({ id, newCount }) {
+    this.items.find(el => el.id === id).count = newCount >= 0 ? newCount : 0;
   }
 }
