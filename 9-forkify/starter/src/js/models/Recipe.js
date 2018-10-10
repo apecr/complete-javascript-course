@@ -20,7 +20,8 @@ export default class Recipe {
           publisher_url: this.publisher_url,
           social_rank: this.social_rank,
           source_url: this.source_url,
-          title: this.title
+          title: this.title,
+          author: this.author
         } = res.data.recipe
       );
     } catch (error) {

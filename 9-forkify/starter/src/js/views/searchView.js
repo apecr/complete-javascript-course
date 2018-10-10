@@ -2,7 +2,7 @@ import { elements } from './base';
 
 /*global document*/
 
-const limitRecipeTitle = (title, limit = 17) => title.length > limit
+export const limitRecipeTitle = (title, limit = 17) => title.length > limit
   ? `${title.split(' ').reduce((acc, word) => {
     return acc.length + word.length > limit ? acc : `${acc}${word} `;
   }, '').trim()} ...`
@@ -39,7 +39,7 @@ export const clearResults = _ => {
 export const highlightSelected = id => {
   const resultsArr = Array.from(document.querySelectorAll('.results__link'));
   resultsArr.forEach(element => element.classList.remove('results__link--active'));
-  document.querySelector(`a[href="#${id}"]`).classList.add('results__link--active');
+  document.querySelector(`.results__link[href="#${id}"]`).classList.add('results__link--active');
 };
 
 // type: prev or next
