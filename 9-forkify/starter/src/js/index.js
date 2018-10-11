@@ -174,6 +174,15 @@ elements.shopping.addEventListener('click', event => {
 ['hashchange', 'load']
   .forEach(event => window.addEventListener(event, controlRecipe));
 
+// Restore liked recipes when on page load
+window.addEventListener('load', _ => {
+  state.likes = new Likes();
+  state.likes.readStorage();
+  likesView.toggleLikeMenu(state.likes.length);
+  state.likes.likes.forEach(likesView.renderLike);
+});
+
+
 // Handling recipe button clicks
 elements.recipe.addEventListener('click', event => {
   if (event.target.matches('.btn-decrease, .btn-decrease *')) {
