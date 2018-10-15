@@ -20,9 +20,7 @@ import * as likesView from './views/likesView';
  * - Shopping list object
  * - Liked recipes
  */
-const state = {};
-window.state = state;
-window.likes = new Likes();
+const state = {likes: new Likes()};
 likesView.toggleLikeMenu(state.likes.getNumberOfLikes());
 
 const controlSearch = async _ => {
